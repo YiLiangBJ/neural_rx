@@ -1,0 +1,18 @@
+[project]
+name = "neural-rx"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "jupyter>=1.1.1",
+    "matplotlib>=3.10.7",
+    "mitsuba==3.5.2",
+    "onnx==1.14.0",
+    "pandas>=2.3.3",
+    "polygraphy>=0.49.26",
+    "sionna==0.18.0",
+    "tensorflow==2.15.0",
+    "tensorrt>=10.13.3.9",
+    "tf2onnx>=1.16.1",
+]
