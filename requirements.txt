@@ -1,7 +1,10 @@
 sionna==0.18.0
+tensorflow=2.15.0
+jupyter
 matplotlib
 pandas
-onnx==1.16.2
+onnx==1.14.0
 tf2onnx
 polygraphy
+tensorrt
 mitsuba==3.5.2 # not specified sionna==0.18.0
