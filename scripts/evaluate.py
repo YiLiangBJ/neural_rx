@@ -67,19 +67,24 @@ distribute = None # use "all" to distribute over multiple GPUs
 import os
 # Avoid warnings from TensorFlow
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
 
 gpus = tf.config.list_physical_devices('GPU')
 
 if distribute != "all":
-    try:
-        tf.config.set_visible_devices(gpus[args.gpu], 'GPU')
-        print('Only GPU number', args.gpu, 'used.')
-        tf.config.experimental.set_memory_growth(gpus[args.gpu], True)
-    except RuntimeError as e:
-        print(e)
+    if gpus and len(gpus) > args.gpu:
+        try:
+            tf.config.set_visible_devices(gpus[args.gpu], 'GPU')
+            print('Only GPU number', args.gpu, 'used.')
+            tf.config.experimental.set_memory_growth(gpus[args.gpu], True)
+        except RuntimeError as e:
+            print(e)
+    else:
+        print("No GPU detected or GPU index out of range, using CPU.")
+        tf.config.set_visible_devices([], 'GPU')
 
 import sys
 sys.path.append('../')
