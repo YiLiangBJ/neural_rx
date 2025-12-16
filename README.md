@@ -16,6 +16,8 @@ its affiliates is strictly prohibited. -->
 > - **GPU**: NVIDIA GPU + CUDA 12.x (recommended for training)
 > - **Note**: Windows and macOS are NOT supported due to dependencies on Sionna, Mitsuba, and TensorRT.
 
+> **🚀 Quick Start**: New to this project? See [Quick Start Guide](docs/QUICK_START_FINAL.md) for complete installation and usage instructions!
+
 The code in this repository allows to design, train, and evaluate [neural
 receivers](https://developer.nvidia.com/blog/towards-environment-specific-base-stations-ai-ml-driven-neural-5g-nr-multi-user-mimo-receiver/)
 using the [NVIDIA® Sionna™ link-level simulation
