@@ -41,8 +41,17 @@ source .venv/bin/activate
 ## 🚀 快速验证
 
 ```bash
-# 运行 GPU 验证脚本
+# 运行完整系统验证脚本(推荐)
 python verify_gpu.py
+
+# 输出包括:
+# - 系统信息(OS、Python 版本)
+# - CPU 信息(核心数、频率、使用率)
+# - 内存信息(总量、可用、SWAP)
+# - 磁盘信息(各分区容量)
+# - GPU 检测(TensorFlow/PyTorch)
+# - CUDA/cuDNN 版本
+# - 性能评估和使用建议
 
 # 或者手动检查
 python -c "import tensorflow as tf; print(f'TF: {tf.__version__}')"

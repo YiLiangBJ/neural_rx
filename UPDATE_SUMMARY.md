@@ -2,7 +2,21 @@
 
 ## 三个问题的解答
 
-### 问题 1: Windows 和 Linux 的 TF/Sionna 版本为什么不同?
+### 问### 问题 3: Notebook 转换为 Python 文件
+
+**✅ 已完成!** 创建了增强版 `verify_gpu.py` 脚本
+
+新文件特性:
+- ✅ 从 `VerifyGPU_CUDA_cuDNN.ipynb` 转换并增强
+- ✅ **系统信息**: 操作系统、Python 版本、处理器类型
+- ✅ **CPU 信息**: 核心数、频率、实时使用率
+- ✅ **内存信息**: 总量、可用、已用、SWAP 状态
+- ✅ **磁盘信息**: 各分区容量和使用情况
+- ✅ **GPU 检测**: TensorFlow 和 PyTorch GPU 支持
+- ✅ **CUDA/cuDNN**: 版本信息和计算测试
+- ✅ **性能评估**: 根据硬件配置给出使用建议
+- ✅ 修复了 Windows 编码问题
+- ✅ 美化的输出格式s 和 Linux 的 TF/Sionna 版本为什么不同?
 
 **是的,这是故意的!** 这是 TensorFlow 官方的限制,不是配置错误。
 

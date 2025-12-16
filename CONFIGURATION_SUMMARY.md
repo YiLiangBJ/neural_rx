@@ -22,10 +22,12 @@
 - ✅ TensorFlow 日志级别设置
 - ✅ CUDA 设备配置(可选)
 
-### 4. `verify_gpu.py` - GPU 验证脚本 (新增)
-- ✅ 从 `VerifyGPU_CUDA_cuDNN.ipynb` 转换而来
-- ✅ 检查 TensorFlow 和 PyTorch 的 GPU 支持
-- ✅ 显示 CUDA 和 cuDNN 版本
+### 4. `verify_gpu.py` - 系统能力验证脚本 (新增)
+- ✅ 从 `VerifyGPU_CUDA_cuDNN.ipynb` 转换而来并大幅增强
+- ✅ **完整系统信息**: CPU、内存、磁盘、操作系统
+- ✅ **GPU 检测**: TensorFlow 和 PyTorch 的 GPU 支持
+- ✅ **CUDA/cuDNN**: 版本信息和性能测试
+- ✅ **性能评估**: 自动评估机器适合的工作负载
 - ✅ 可以直接运行: `python verify_gpu.py`
 
 ### 5. 文档
