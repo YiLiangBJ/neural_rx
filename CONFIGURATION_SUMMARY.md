@@ -14,13 +14,14 @@
 
 ### 2. `.python-version` - Python 版本锁定
 - ✅ 指定 Python 3.10
-- ✅ `uv sync` 会自动查找并使用 Python 3.10
+- ✅ `uv sync` 会自动查找或下载 Python 3.10
+- ✅ **无需手动安装 Python**,UV 会自动处理!
 
 ### 3. `.env` - 环境变量配置
-- ✅ Intel 代理配置
-- ✅ Python 3.10 路径 (自动检测 Windows/Linux)
+- ✅ Intel 代理配置 (必需,用于下载 Python 和依赖包)
 - ✅ TensorFlow 日志级别设置
 - ✅ CUDA 设备配置(可选)
+- ⚠️  **不需要指定 Python 路径**,UV 会自动管理!
 
 ### 4. `verify_gpu.py` - 系统能力验证脚本 (新增)
 - ✅ 从 `VerifyGPU_CUDA_cuDNN.ipynb` 转换而来并大幅增强
@@ -41,30 +42,25 @@
 
 ### 在你的 Windows 机器上 (当前环境):
 
-1. **确保有 Python 3.10**:
-   ```bash
-   python --version  # 应该显示 Python 3.10.x
-   ```
-   
-   如果没有,从 https://www.python.org/downloads/ 下载安装 Python 3.10
-
-2. **删除旧虚拟环境**:
+1. **删除旧虚拟环境**:
    ```bash
    rm -rf .venv
    rm -f uv.lock  # 删除旧的锁定文件
    ```
 
-3. **创建新环境 (uv 会自动使用 Python 3.10)**:
+2. **创建新环境 (UV 会自动下载 Python 3.10)**:
    ```bash
-   source .env  # 加载代理配置
+   source .env  # 加载代理配置(必需!)
    uv sync --extra windows-cpu
    source .venv/Scripts/activate
    ```
 
-4. **验证安装**:
+3. **验证安装**:
    ```bash
-   python verify_gpu.py  # 运行 GPU 验证脚本
+   python verify_gpu.py  # 运行系统验证脚本
    ```
+
+**重要**: UV 会通过代理自动下载并安装 Python 3.10,无需手动安装!
 
 ---
 
@@ -106,8 +102,10 @@ python verify_gpu.py  # 验证 GPU 和 CUDA
 
 ## ⚠️ 重要提示
 
-1. **Python 版本**: 必须使用 **3.10** (官方推荐)
-   - ✅ `.python-version` 文件已配置,`uv sync` 会自动查找 Python 3.10
+1. **Python 版本**: Python 3.10 (官方推荐)
+   - ✅ `.python-version` 文件已配置
+   - ✅ UV 会**自动下载并安装** Python 3.10
+   - ⚠️  **必须先** `source .env` 加载代理,UV 才能下载 Python!
    
 2. **ONNX 版本**: 必须使用 **1.14** (1.15 有已知 bug)
 
@@ -117,9 +115,9 @@ python verify_gpu.py  # 验证 GPU 和 CUDA
 
 4. **Windows 限制**: Mitsuba 和 TensorRT 仅支持 Linux
 
-5. **代理设置**: Intel 内网用户务必先 `source .env`
+5. **代理设置**: Intel 内网用户**必须先** `source .env` 才能使用 UV
 
-6. **GPU 验证**: 运行 `python verify_gpu.py` 检查环境
+6. **系统验证**: 运行 `python verify_gpu.py` 检查完整系统能力
 
 ---
 

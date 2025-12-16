@@ -31,17 +31,25 @@
 
 ### 问题 2: Python 版本自动管理
 
-**✅ 已完成!** 现在 `uv sync` 会自动查找并使用 Python 3.10。
+**✅ 已完成!** 现在 `uv sync` 会自动管理 Python 版本。
 
 配置文件:
 1. **`.python-version`** - 包含 `3.10`
-2. **`pyproject.toml`** - 添加了 `python-version = "3.10"`
+2. **`pyproject.toml`** - `requires-python = ">=3.10,<3.11"`
 
-使用方法:
+**UV 的智能行为**:
+- ✅ 读取 `.python-version` 确定需要 Python 3.10
+- ✅ 在系统中查找 Python 3.10
+- ✅ 如果没有,**自动下载并安装** Python 3.10
+- ✅ 自动设置虚拟环境使用正确的 Python 版本
+
+**使用方法**:
 ```bash
-# uv 会自动查找 Python 3.10,无需手动指定
-uv sync --extra linux-gpu
+source .env  # 加载代理(必需!)
+uv sync --extra linux-gpu  # UV 自动处理 Python 版本
 ```
+
+**无需手动安装 Python!** UV 会通过代理自动下载。
 
 ---
 

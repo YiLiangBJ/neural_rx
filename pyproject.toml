@@ -51,10 +51,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-# 使用系统 Python,不下载新的 Python
-python-preference = "only-system"
+# UV 会根据 .python-version 和 requires-python 自动管理 Python 版本
+# 无需额外配置
 
-# 开发依赖(使用新的 dependency-groups 语法)
 [dependency-groups]
 dev = [
     "pytest>=7.0.0",

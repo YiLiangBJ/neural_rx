@@ -5,8 +5,9 @@
 ## 前置要求
 
 - **uv** 包管理器 (安装: `pip install uv` 或参考 https://github.com/astral-sh/uv)
-- **Python 3.10** (官方推荐版本)
+- **Python 3.10** - ✅ **UV 会自动下载安装,无需手动安装!**
 - **Git** (用于克隆代码)
+- **代理配置** (Intel 内网用户必需)
 
 ---
 
@@ -24,13 +25,14 @@
 **安装步骤**:
 
 ```bash
-# 1. 加载代理配置 (如需要)
+# 1. 加载代理配置 (Intel 内网必需!)
 source .env
 
 # 2. 删除旧虚拟环境 (如果存在)
 rm -rf .venv
 
 # 3. 创建虚拟环境并安装依赖
+# UV 会自动下载 Python 3.10(如果系统没有)
 uv sync --extra windows-cpu
 
 # 4. 激活虚拟环境 (Git Bash)
@@ -41,10 +43,11 @@ source .venv/Scripts/activate
 ```
 
 **验证安装**:
-```python
-python -c "import tensorflow as tf; print(f'TensorFlow: {tf.__version__}')"
-python -c "import sionna as sn; print(f'Sionna: {sn.__version__}')"
+```bash
+python verify_gpu.py  # 运行系统验证脚本
 ```
+
+**注意**: UV 会通过代理自动下载并安装 Python 3.10,所以必须先 `source .env`!
 
 ---
 
