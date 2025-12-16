@@ -23,8 +23,8 @@ dependencies = [
 windows-cpu = [
     "tensorflow-cpu==2.10.1",
     "sionna==0.14.0",
-    "onnx==1.14.0",
-    "tf2onnx>=1.16.0",
+    "onnx==1.12.0",
+    "tf2onnx<1.16.0",
 ]
 
 linux-cpu = [
@@ -36,7 +36,7 @@ linux-cpu = [
 ]
 
 linux-gpu = [
-    "tensorflow[and-cuda]==2.15.0",
+    "tensorflow==2.15.0",  # 不使用 [and-cuda],避免依赖问题
     "sionna==0.18.0",
     "mitsuba==3.5.2",
     "onnx==1.14.0",
@@ -51,8 +51,24 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv]
-# UV 会根据 .python-version 和 requires-python 自动管理 Python 版本
-# 无需额外配置
+# 不指定默认的 extra,用户需要显式选择
+default-groups = []
+
+# 定义冲突的 extras - windows-cpu, linux-cpu, linux-gpu 互斥
+conflicts = [
+    [
+        { extra = "windows-cpu" },
+        { extra = "linux-cpu" },
+    ],
+    [
+        { extra = "windows-cpu" },
+        { extra = "linux-gpu" },
+    ],
+    [
+        { extra = "linux-cpu" },
+        { extra = "linux-gpu" },
+    ],
+]
 
 [dependency-groups]
 dev = [
