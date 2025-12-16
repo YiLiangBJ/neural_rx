@@ -18,10 +18,11 @@ Unable to register cuBLAS factory
 
 ## 解决方案
 
-使用 **`tensorflow[and-cuda]==2.15.0`**,它会:
-- ✅ 自带 CUDA 12.3
-- ✅ 自带 cuDNN 9.0
+使用 **`tensorflow==2.15.0` + 显式的 NVIDIA CUDA 包**:
+- ✅ 在虚拟环境中安装 CUDA 12.3
+- ✅ 在虚拟环境中安装 cuDNN 9.1
 - ✅ 不依赖系统 CUDA 版本
+- ✅ 避免 `tensorflow[and-cuda]` 的依赖问题
 - ✅ 就像 PyTorch 一样开箱即用
 
 ---
@@ -34,13 +35,13 @@ Unable to register cuBLAS factory
 
 ```toml
 gpu = [
-    "tensorflow[and-cuda]==2.15.0",  # ✅ 改动:自带 CUDA
+    "tensorflow[and-cuda]==2.15.0",  # ✅ 改动:自带 CUDA 12.3, cuDNN 9.0, TensorRT 8.6
     "sionna==0.18.0",
     "mitsuba==3.5.2",
     "onnx==1.14.0",
     "tf2onnx>=1.16.0",
     "polygraphy>=0.49.0",
-    "tensorrt>=9.6.0",
+    # TensorRT 由 tensorflow[and-cuda] 提供,不单独指定
 ]
 ```
 
@@ -238,8 +239,11 @@ GPU memory growth enabled for GPU 0
 - `nvidia-cusparse-cu12`
 - `nvidia-nccl-cu12`
 - `nvidia-nvjitlink-cu12`
+- `tensorrt==8.6.1.post1` (TensorFlow 2.15 兼容版本)
 
 总大小约 **~3GB**,但完全值得!
+
+**注意**: TensorRT 8.6.1 是 TensorFlow 2.15 官方支持的版本。虽然比 9.x 旧,但是经过充分测试和优化的。
 
 ---
 
