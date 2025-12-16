@@ -16,3 +16,15 @@ onnx_models/*
 *.tfrecord
 /weights/site_specific_sweep/*
 *.csv
+
+# 环境配置文件(包含代理等敏感信息)
+.env
+.env.local
+
+# Python 虚拟环境
+.venv/
+venv/
+*.egg-info/
+
+# UV 锁定文件(可选: 如果想让每个环境独立解析,可以忽略它)
+# uv.lock
