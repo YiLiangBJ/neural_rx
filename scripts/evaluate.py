@@ -87,7 +87,11 @@ if distribute != "all":
         tf.config.set_visible_devices([], 'GPU')
 
 import sys
-sys.path.append('../')
+# Change to parent directory so relative paths work
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.insert(0, parent_dir)
+os.chdir(parent_dir)
 
 import sionna as sn
 from sionna.utils import sim_ber

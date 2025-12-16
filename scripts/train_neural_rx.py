@@ -51,7 +51,12 @@ except RuntimeError as e:
     print(e)
 
 import sys
-sys.path.append('../')
+import os
+
+# Add parent directory to path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.insert(0, parent_dir)
 
 from utils import E2E_Model, training_loop, Parameters, load_weights
 
@@ -61,6 +66,8 @@ from utils import E2E_Model, training_loop, Parameters, load_weights
 
 # all relevant parameters are defined in the config_file
 config_name = args.config_name
+# Change to parent directory so relative paths in Parameters work
+os.chdir(parent_dir)
 
 # initialize system parameters
 sys_parameters = Parameters(config_name,
