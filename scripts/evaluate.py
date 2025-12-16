@@ -87,11 +87,13 @@ if distribute != "all":
         tf.config.set_visible_devices([], 'GPU')
 
 import sys
-# Change to parent directory so relative paths work
+# Initialize project paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(script_dir)
 sys.path.insert(0, parent_dir)
-os.chdir(parent_dir)
+
+from utils.project_paths import init_project_paths, get_weights_path, get_results_path
+init_project_paths()  # Switch to project root and create directories
 
 import sionna as sn
 from sionna.utils import sim_ber
@@ -119,8 +121,7 @@ batch_size = sys_parameters.batch_size_eval
 batch_size_small = sys_parameters.batch_size_eval_small
 
 # results are directly saved in files
-results_filename = f"{sys_parameters.label}_results"
-results_filename = "../results/" + results_filename
+results_filename = get_results_path(sys_parameters.label)
 
 if exists(results_filename):
     print(f"### File '{results_filename}' found. " \
@@ -192,7 +193,7 @@ for num_tx_eval in num_tx_evals:
         print("\nRunning: " + sys_parameters.system)
         #  Run once and load the weights
         e2e_nn(1, 1.)
-        filename = f'../weights/{sys_parameters.label}_weights'
+        filename = get_weights_path(sys_parameters.label)
         load_weights(e2e_nn, filename)
 
         # and set number iterations for evaluation

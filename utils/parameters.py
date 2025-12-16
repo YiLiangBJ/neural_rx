@@ -71,26 +71,17 @@ class Parameters:
         ##### Load configuration file #####
         ###################################
 
-        # create parser object and read config file
-        # Try multiple possible paths for config file
-        possible_paths = [
-            f'config/{config_name}',  # When run from project root
-            f'config/{config_name}.cfg',  # With .cfg extension
-            f'../config/{config_name}',  # When run from scripts/
-            f'../config/{config_name}.cfg',  # With .cfg extension from scripts/
-        ]
+        # Use project_paths module for consistent path resolution
+        from utils.project_paths import get_config_path
+        import os
         
-        fn = None
-        for path in possible_paths:
-            if exists(path):
-                fn = path
-                break
+        fn = get_config_path(config_name)
         
-        if fn:
+        if os.path.exists(fn):
             config = configparser.RawConfigParser()
             config.read(fn)
         else:
-            raise FileNotFoundError(f"Unknown config file: {config_name}. Tried: {possible_paths}")
+            raise FileNotFoundError(f"Config file not found: {fn}")
 
         # and import all parameters as attributes
         self.config_str = ""
@@ -421,12 +412,13 @@ class Parameters:
                 raise FileNotFoundError("time_cov_mat.npy not found. " \
                     "Please run compute_cov_mat.py for given config first.")
 
+            from utils.project_paths import WEIGHTS_DIR
             self.space_cov_mat = tf.cast(np.load(
-                        f'../weights/{self.label}_space_cov_mat.npy'),
+                        str(WEIGHTS_DIR / f'{self.label}_space_cov_mat.npy')),
                                                 tf.complex64)
             self.time_cov_mat = tf.cast(np.load(
-                        f'../weights/{self.label}_time_cov_mat.npy'),
+                        str(WEIGHTS_DIR / f'{self.label}_time_cov_mat.npy')),
                                             tf.complex64)
             self.freq_cov_mat = tf.cast(np.load(
-                        f'../weights/{self.label}_freq_cov_mat.npy'),
+                        str(WEIGHTS_DIR / f'{self.label}_freq_cov_mat.npy')),
                                             tf.complex64)

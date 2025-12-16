@@ -526,10 +526,11 @@ def plot_results(config_name, show_ber=False, xlim=None, ylim=None,
         Selects the MCS index (element index of the mcs_index list) of the
         results to be plotted, defaults to 0.
     """
+    from utils.project_paths import get_results_path
     sys_parameters = Parameters(config_name,
                                 training=False,
                                 system='dummy') # dummy system)
-    filename = f"../results/{sys_parameters.label}_results"
+    filename = get_results_path(sys_parameters.label)
 
     if num_tx_eval is None:
         num_tx_eval = sys_parameters.max_num_tx
@@ -620,10 +621,11 @@ def export_csv(config_name, num_tx_eval):
     num_tx_eval : int
         Plot only results for ``num_tx_eval`` active users.
     """
+    from utils.project_paths import get_results_path
     sys_parameters = Parameters(config_name,
                                 training=True,
                                 system='dummy') # dummy system)
-    filename = f"../results/{sys_parameters.label}_results"
+    filename = get_results_path(sys_parameters.label)
 
     with open(filename,'rb') as f:
         snrs, BERs, BLERs = pickle.load(f)
@@ -683,10 +685,11 @@ def plot_gp(config_name, num_tx_eval=None, xlim=None, ylim=None, fig=None,
         Defaults to False. If True, additional information is provided.
 
     """
+    from utils.project_paths import get_results_path
     sys_parameters = Parameters(config_name,
                                 training=False,
                                 system='nn') # dummy system to init transmitter
-    filename = f"../results/{sys_parameters.label}_results"
+    filename = get_results_path(sys_parameters.label)
 
     if num_tx_eval is None:
         num_tx_eval = sys_parameters.max_num_tx
@@ -785,6 +788,7 @@ def export_constellation(config_name, fn="custom_constellation"):
     """
 
     # load system_parameters and model
+    from utils.project_paths import get_weights_path
     sys_parameters = Parameters(config_name,
                                 training=True,
                                 system='nn')
@@ -793,7 +797,7 @@ def export_constellation(config_name, fn="custom_constellation"):
 
     # init weights
     model(1,1.);
-    filename = f'../weights/{sys_parameters.label}_weights'
+    filename = get_weights_path(sys_parameters.label)
     load_weights(model, filename)
 
     # get constellation points

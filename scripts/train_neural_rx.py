@@ -43,20 +43,22 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')
 
+# Initialize project paths (must be done before other imports)
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.insert(0, parent_dir)
+
+from utils.project_paths import init_project_paths, get_weights_path, get_logs_path
+init_project_paths()  # Switch to project root and create directories
+
 gpus = tf.config.list_physical_devices('GPU')
 try:
     print('Only GPU number', args.gpu, 'used.')
     tf.config.experimental.set_memory_growth(gpus[0], True)
 except RuntimeError as e:
     print(e)
-
-import sys
-import os
-
-# Add parent directory to path
-script_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(script_dir)
-sys.path.insert(0, parent_dir)
 
 from utils import E2E_Model, training_loop, Parameters, load_weights
 
@@ -66,21 +68,19 @@ from utils import E2E_Model, training_loop, Parameters, load_weights
 
 # all relevant parameters are defined in the config_file
 config_name = args.config_name
-# Change to parent directory so relative paths in Parameters work
-os.chdir(parent_dir)
 
 # initialize system parameters
 sys_parameters = Parameters(config_name,
                             system='nrx',
                             training=True)
 label = f'{sys_parameters.label}'
-filename = '../weights/'+ label + '_weights'
-training_logdir = '../logs' # use TensorBoard to visualize
+filename = get_weights_path(label)
+training_logdir = get_logs_path()
 training_seed = 42
 
 if args.debug:
     tf.config.run_functions_eagerly(True)
-    training_logdir = training_logdir + "/debug"
+    training_logdir = get_logs_path("debug")
 
 #################################################################
 # Start training

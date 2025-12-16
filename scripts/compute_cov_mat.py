@@ -53,7 +53,14 @@ except RuntimeError as e:
     print(e)
 
 import sys
-sys.path.append('../')
+# Initialize project paths
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.insert(0, parent_dir)
+
+from utils.project_paths import init_project_paths, WEIGHTS_DIR
+init_project_paths()  # Switch to project root and create directories
 
 import sionna as sn
 sn.Config.xla_compat = True
@@ -169,6 +176,6 @@ space_cov_mat = space_cov_mat.numpy()
 
 # Saving covariance matrices
 # Save the time and frequency covariance matrices.
-np.save(f'../weights/{parameters.label}_freq_cov_mat', freq_cov_mat)
-np.save(f'../weights/{parameters.label}_time_cov_mat', time_cov_mat)
-np.save(f'../weights/{parameters.label}_space_cov_mat', space_cov_mat)
+np.save(str(WEIGHTS_DIR / f'{parameters.label}_freq_cov_mat'), freq_cov_mat)
+np.save(str(WEIGHTS_DIR / f'{parameters.label}_time_cov_mat'), time_cov_mat)
+np.save(str(WEIGHTS_DIR / f'{parameters.label}_space_cov_mat'), space_cov_mat)

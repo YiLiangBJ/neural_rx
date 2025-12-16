@@ -55,7 +55,14 @@ except RuntimeError as e:
 import numpy as np
 
 import sys
-sys.path.append('../')
+# Initialize project paths
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+sys.path.insert(0, parent_dir)
+
+from utils.project_paths import init_project_paths, get_weights_path, get_onnx_path
+init_project_paths()  # Switch to project root and create directories
 
 from utils import Parameters, NeuralReceiverONNX, load_weights
 
@@ -118,7 +125,7 @@ neural_rx(nrx_inputs);
 
 # load weights
 print("Loading pre-trained weights.")
-load_weights(neural_rx, f"../weights/{sys_parameters.label}_weights")
+load_weights(neural_rx, get_weights_path(sys_parameters.label))
 
 # and set number iterations for evaluation
 neural_rx._cgnn.num_it = sys_parameters.num_nrx_iter_eval
@@ -129,7 +136,7 @@ neural_rx._cgnn.num_it = sys_parameters.num_nrx_iter_eval
 # Remark: this is not strictly required for the ONNX export
 # Can be used for other inference pipelines
 
-neural_rx.save(f"../onnx_models/{sys_parameters.label}_tf")
+neural_rx.save(get_onnx_path(sys_parameters.label, "_tf"))
 
 ################
 # Export to ONNX
@@ -165,7 +172,7 @@ onnx_model, _ = tf2onnx.convert.from_keras(neural_rx, input_signature)
 
 # and save the ONNX model
 print("---Saving ONNX model---")
-onnx.save(onnx_model,f"../onnx_models/{sys_parameters.label}.onnx")
+onnx.save(onnx_model, get_onnx_path(sys_parameters.label, ".onnx"))
 
 #################################
 # compile ONNX model with TRTExec
@@ -194,8 +201,8 @@ for a,b in zip(num_prbs, num_dmrs_time):
     num_pilots.append(a * b * num_dmrs_subcarrier)
 
 trt_command = f'trtexec --fp16 '\
-    f'--onnx=../onnx_models/{sys_parameters.label}.onnx '\
-    f'--saveEngine=../onnx_models/{sys_parameters.label}.plan '#\
+    f'--onnx={get_onnx_path(sys_parameters.label, ".onnx")} '\
+    f'--saveEngine={get_onnx_path(sys_parameters.label, ".plan")} '#\
     #f'--dumpProfile --separateProfileRun '
 # for latest TensorRT versions, the flag "--preview=-fasterDynamicShapes0805"
 # might give a few additional us latency.
