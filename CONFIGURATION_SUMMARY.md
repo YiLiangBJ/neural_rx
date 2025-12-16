@@ -6,11 +6,14 @@
 
 ### 1. `pyproject.toml` - 依赖管理配置
 - ✅ Python 版本: **3.10** (官方推荐,严格限制 `>=3.10,<3.11`)
-- ✅ **自动 Python 版本管理**: 配置了 `python-version = "3.10"` + `.python-version` 文件
+- ✅ **自动 Python 版本管理**: UV 会自动下载 Python 3.10
+- ✅ **平台特定依赖**: 使用环境标记 (`platform_system == 'Windows'` / `'Linux'`)
+- ✅ **冲突解析**: 使用 `tool.uv.conflicts` 确保互斥的 extras
+- ✅ **版本兼容性**: Windows (TF 2.10.1 + ONNX 1.12.0),Linux (TF 2.15 + ONNX 1.14.0)
 - ✅ 三种依赖组:
-  - **windows-cpu**: TF 2.10.1 + Sionna 0.14 (Windows 限制,TF 2.15+ 不支持 Windows)
-  - **linux-cpu**: TF 2.15 + Sionna 0.18 + Mitsuba (官方推荐配置)
-  - **linux-gpu**: TF 2.15 + Sionna 0.18 + TensorRT 9.6+ + Mitsuba (完整配置)
+  - **windows-cpu**: TF 2.10.1 + Sionna 0.14 (Windows 限制)
+  - **linux-cpu**: TF 2.15 + Sionna 0.18 + Mitsuba (官方推荐)
+  - **linux-gpu**: TF 2.15 + Sionna 0.18 + TensorRT + Mitsuba (完整配置)
 
 ### 2. `.python-version` - Python 版本锁定
 - ✅ 指定 Python 3.10
@@ -107,11 +110,14 @@ python verify_gpu.py  # 验证 GPU 和 CUDA
    - ✅ UV 会**自动下载并安装** Python 3.10
    - ⚠️  **必须先** `source .env` 加载代理,UV 才能下载 Python!
    
-2. **ONNX 版本**: 必须使用 **1.14** (1.15 有已知 bug)
+2. **平台特定配置**: 
+   - ⚠️  在 Windows 上,`pyproject.toml` 中 `required-environments = ["platform_system == 'Windows'"]`
+   - ⚠️  在 Linux 上,需要改为 `required-environments = ["platform_system == 'Linux'"]`
+   - ⚠️  或者删除这一行,UV 会自动检测(但可能导致跨平台解析问题)
 
-3. **Windows vs Linux 版本差异** (这是故意的!):
-   - **Windows**: TF 2.10.1 + Sionna 0.14 (TF 2.15+ 不支持 Windows)
-   - **Linux**: TF 2.15 + Sionna 0.18 (官方推荐,功能完整)
+3. **版本差异** (这是故意的!):
+   - **Windows**: TF 2.10.1 + ONNX 1.12.0 + Sionna 0.14 (兼容性要求)
+   - **Linux**: TF 2.15 + ONNX 1.14.0 + Sionna 0.18 (官方推荐)
 
 4. **Windows 限制**: Mitsuba 和 TensorRT 仅支持 Linux
 
