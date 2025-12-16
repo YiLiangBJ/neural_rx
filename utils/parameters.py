@@ -72,14 +72,25 @@ class Parameters:
         ###################################
 
         # create parser object and read config file
-        fn = f'../config/{config_name}'
-        if exists(fn):
+        # Try multiple possible paths for config file
+        possible_paths = [
+            f'config/{config_name}',  # When run from project root
+            f'config/{config_name}.cfg',  # With .cfg extension
+            f'../config/{config_name}',  # When run from scripts/
+            f'../config/{config_name}.cfg',  # With .cfg extension from scripts/
+        ]
+        
+        fn = None
+        for path in possible_paths:
+            if exists(path):
+                fn = path
+                break
+        
+        if fn:
             config = configparser.RawConfigParser()
-            # automatically add fileformat if needed
-            config_name.replace(".cfg","") + ".cfg"
             config.read(fn)
         else:
-            raise FileNotFoundError("Unknown config file.")
+            raise FileNotFoundError(f"Unknown config file: {config_name}. Tried: {possible_paths}")
 
         # and import all parameters as attributes
         self.config_str = ""
