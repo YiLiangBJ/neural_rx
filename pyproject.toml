@@ -32,8 +32,8 @@ cpu = [
 # Linux GPU 环境 (生产训练和推理 - 推荐)
 gpu = [
     "tensorflow==2.15.0",
-    # CUDA 12.x 支持包 (自带在虚拟环境中)
-    "nvidia-cudnn-cu12==9.1.0.70",
+    # CUDA 12.2 + cuDNN 8.x 支持包 (匹配 TensorFlow 2.15.0 编译版本)
+    "nvidia-cudnn-cu12==8.9.7.29",  # cuDNN 8.9 for CUDA 12
     "nvidia-cuda-runtime-cu12==12.3.101",
     "nvidia-cublas-cu12==12.3.4.1",
     "nvidia-cufft-cu12==11.0.12.1",
