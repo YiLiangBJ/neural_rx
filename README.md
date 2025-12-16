@@ -10,6 +10,12 @@ its affiliates is strictly prohibited. -->
 
 # Real-Time Inference of 5G NR Multi-user MIMO Neural Receivers
 
+> **⚠️ System Requirements:**
+> - **Operating System**: Linux (Ubuntu 22.04 LTS recommended)
+> - **Python**: 3.10
+> - **GPU**: NVIDIA GPU + CUDA 12.x (recommended for training)
+> - **Note**: Windows and macOS are NOT supported due to dependencies on Sionna, Mitsuba, and TensorRT.
+
 The code in this repository allows to design, train, and evaluate [neural
 receivers](https://developer.nvidia.com/blog/towards-environment-specific-base-stations-ai-ml-driven-neural-5g-nr-multi-user-mimo-receiver/)
 using the [NVIDIA® Sionna™ link-level simulation

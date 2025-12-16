@@ -1,38 +1,34 @@
 # Neural RX - 快速开始
 
-根据你的机器环境,选择对应的安装方式:
+**⚠️ 系统要求: Linux + Python 3.10**
+
+根据你的硬件配置,选择对应的安装方式:
 
 ## 🖥️ 场景选择
 
-### 1️⃣ Windows CPU (代码调试)
+### 1️⃣ Linux CPU (开发和小规模实验)
 ```bash
-source .env
-uv sync --extra windows-cpu
-source .venv/Scripts/activate
-```
-
-### 2️⃣ Linux CPU (训练评估)
-```bash
-source .env
-uv sync --extra linux-cpu
+source .env  # 如需代理
+uv sync --extra cpu
 source .venv/bin/activate
 ```
 
-### 3️⃣ Linux GPU (完整功能)
+### 2️⃣ Linux GPU (生产训练 - 推荐)
 ```bash
-source .env
-uv sync --extra linux-gpu
+source .env  # 如需代理
+uv sync --extra gpu
 source .venv/bin/activate
 ```
 
 ## ⚙️ 环境要求
 
-- **Python**: 3.10 (官方推荐,`.python-version` 已配置)
-- **操作系统**: 
-  - Windows: 仅支持 CPU 调试 (TF 2.10.1 + Sionna 0.14)
-  - Linux: 支持 CPU 和 GPU (TF 2.15 + Sionna 0.18,官方推荐)
+- **操作系统**: Linux (推荐 Ubuntu 22.04)
+- **Python**: 3.10 (`.python-version` 已配置,UV 会自动下载)
+- **GPU**: 推荐 NVIDIA GPU + CUDA 12.x (用于 `--extra gpu`)
 
-**注意**: Windows 和 Linux 的 TensorFlow/Sionna 版本不同是因为 TF 2.15+ 不支持 Windows。
+**注意**: 
+- ❌ **不支持 Windows** (Sionna/Mitsuba 不兼容)
+- ❌ **不支持 macOS** (TensorRT 不支持)
 
 ## 📖 详细文档
 
