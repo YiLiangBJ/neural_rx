@@ -31,13 +31,13 @@ cpu = [
 
 # Linux GPU 环境 (生产训练和推理 - 推荐)
 gpu = [
-    "tensorflow[and-cuda]==2.15.0",  # 自带 CUDA 12.3 和 cuDNN 9.0
+    "tensorflow[and-cuda]==2.15.0",  # 自带 CUDA 12.3, cuDNN 9.0 和 TensorRT 8.6
     "sionna==0.18.0",
     "mitsuba==3.5.2",
     "onnx==1.14.0",
     "tf2onnx>=1.16.0",
     "polygraphy>=0.49.0",
-    "tensorrt>=9.6.0",
+    # 注意: TensorRT 由 tensorflow[and-cuda] 提供,不要单独指定版本
 ]
 
 [build-system]
