@@ -86,14 +86,41 @@ if args.debug:
 # Start training
 #################################################################
 
+print("\n" + "=" * 70)
+print("🚀 开始训练")
+print("=" * 70)
+print(f"📋 配置: {config_name}")
+print(f"🏷️  标签: {label}")
+print(f"🎯 GPU: {args.gpu}")
+print(f"💾 权重路径: {filename}")
+print(f"📊 日志路径: {training_logdir}")
+print(f"🌱 随机种子: {training_seed}")
+if args.debug:
+    print(f"🐛 调试模式: 启用 (eager execution)")
+print("=" * 70)
+print()
+
 sys_training = E2E_Model(sys_parameters, training=True)
 sys_training(1, 1.) # run once to init weights in TensorFlow
 sys_training.summary()
 
 # load weights if the exists already
 if exists(filename):
-    print("\nWeights exist already - loading stored weights.")
+    print("\n💡 检测到已有权重 - 加载中...")
     load_weights(sys_training, filename)
+    print("✅ 权重加载完成")
+else:
+    print("\n🆕 从头开始训练 (未找到已有权重)")
+
+print()
+print("⚙️  训练参数:")
+print(f"   📚 Epochs: {sys_parameters.training_schedule['epochs']}")
+print(f"   📦 Batch size: {sys_parameters.training_schedule['batch_size']}")
+print(f"   👥 用户数范围: {sys_parameters.min_num_tx} - {sys_parameters.max_num_tx}")
+print(f"   📡 MCS 索引: {sys_parameters.mcs_index}")
+print(f"   📈 评估 EbNo: {sys_parameters.eval_ebno_db_arr} dB")
+print(f"   ⚡ XLA 加速: {sys_parameters.xla}")
+print()
 
 if hasattr(sys_parameters, 'mcs_training_snr_db_offset'):
     mcs_training_snr_db_offset = sys_parameters.mcs_training_snr_db_offset
@@ -104,6 +131,10 @@ if hasattr(sys_parameters, 'mcs_training_probs'):
     mcs_training_probs = sys_parameters.mcs_training_probs
 else:
     mcs_training_probs = None
+
+print("🎬 启动训练循环...")
+print("=" * 70)
+print()
 
 # run the training / weights are automatically saved
 # UEs' MCSs will be drawn randomly
@@ -121,3 +152,10 @@ training_loop(sys_training,
               mcs_training_snr_db_offset=mcs_training_snr_db_offset,
               mcs_training_probs=mcs_training_probs,
               xla=sys_parameters.xla)
+
+print()
+print("=" * 70)
+print("✅ 训练完成!")
+print(f"💾 最终权重: {filename}")
+print(f"📊 TensorBoard: tensorboard --logdir {training_logdir}")
+print("=" * 70)

@@ -35,9 +35,13 @@ unset CUDA_HOME
 export TF_CPP_MIN_LOG_LEVEL=3  # 只显示 ERROR
 export TF_ENABLE_ONEDNN_OPTS=0  # 禁用 oneDNN 警告
 
+# 禁用 Python 输出缓冲(确保训练输出实时显示)
+export PYTHONUNBUFFERED=1
+
 echo "✅ 虚拟环境: $VIRTUAL_ENV"
 echo "✅ CUDA 库路径已设置"
 echo "✅ TensorFlow 警告已抑制"
+echo "✅ Python 输出缓冲已禁用"
 echo ""
 
 # 验证 GPU
@@ -45,8 +49,13 @@ echo "🔍 验证 GPU 可用性..."
 python -c "import tensorflow as tf; gpus = tf.config.list_physical_devices('GPU'); print(f'✅ 检测到 {len(gpus)} 个 GPU'); [print(f'   - {gpu.name}') for gpu in gpus]" 2>/dev/null || echo "❌ GPU 检测失败"
 
 echo ""
-echo "📋 可用命令:"
+echo "📋 常用命令:"
 echo "   python verify_gpu.py                                  # 完整系统验证"
 echo "   python scripts/train_neural_rx.py -config_name <cfg>  # 训练模型"
 echo "   python scripts/evaluate.py -config_name <cfg>         # 评估模型"
+echo ""
+echo "📊 监控训练:"
+echo "   tensorboard --logdir logs/                            # 启动 TensorBoard"
+echo "   watch -n 2 nvidia-smi                                 # 实时监控 GPU"
+echo "   ls -lh weights/                                       # 查看保存的权重"
 echo ""

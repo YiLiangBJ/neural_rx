@@ -360,6 +360,9 @@ def training_loop(model, label, filename, training_logdir, training_seed,
     logdir = os.path.join(training_logdir, f"{label}-{current_time}")
     summary_writer = tf.summary.create_file_writer(logdir)
 
+    print(f"📁 TensorBoard 日志: {logdir}")
+    print()
+
     with summary_writer.as_default():
         # save config
         tf.summary.text("config",
@@ -367,7 +370,13 @@ def training_loop(model, label, filename, training_logdir, training_seed,
                         step=0)
         ## Training loop
         global_iter = tf.zeros((), tf.int64)
+        total_phases = len(training_schedule["num_iter"])
+        
         for i, num_iterations in enumerate(training_schedule["num_iter"]):
+            
+            print(f"\n{'=' * 70}")
+            print(f"📌 训练阶段 {i+1}/{total_phases}")
+            print(f"{'=' * 70}")
 
             # read-in training schedule parameters
             num_iterations = int(num_iterations)
@@ -386,12 +395,27 @@ def training_loop(model, label, filename, training_logdir, training_seed,
             max_snr_db = tf.constant(
                     training_schedule["max_training_snr_db"][i], tf.float32)
 
+            print(f"   📊 迭代次数: {num_iterations}")
+            print(f"   📖 学习率: {lr}")
+            print(f"   📦 Batch size: {batch_size}")
+            print(f"   📡 训练用户数: {train_tx}")
+            print(f"   📶 SNR 范围: {min_snr_db.numpy():.1f} - {max_snr_db.numpy():.1f} dB")
+            print(f"   🎯 多损失: {apply_multiloss}")
+            print(f"   {'=' * 70}")
+            print()
+
             # Set the learning rate
             optimizer.learning_rate.assign(lr)
             # Train
             num_iter_global = num_iterations \
                               // sys_parameters.num_iter_train_save
-            for _ in range(num_iter_global):
+            
+            import time
+            phase_start_time = time.time()
+            
+            for iter_idx in range(num_iter_global):
+                iter_start_time = time.time()
+                
                 global_iter, loss, loss_data, loss_chest = \
                             _training_step(global_iter,
                                            sys_parameters.num_iter_train_save,
@@ -401,8 +425,24 @@ def training_loop(model, label, filename, training_logdir, training_seed,
                                            weighting_double_readout,
                                            apply_multiloss,
                                            train_tx)
+                
+                iter_time = time.time() - iter_start_time
+                
                 # Save the trained model
                 save_weights(model, filename)
+                
+                # Print progress
+                progress = (iter_idx + 1) / num_iter_global * 100
+                eta_seconds = (num_iter_global - iter_idx - 1) * iter_time
+                eta_minutes = eta_seconds / 60
+                
+                print(f"   ⏱️  [{iter_idx+1}/{num_iter_global}] "
+                      f"({progress:.1f}%) | "
+                      f"Loss: {loss_data.numpy():.4f} | "
+                      f"Ch.Est: {loss_chest.numpy():.4f} | "
+                      f"用时: {iter_time:.1f}s | "
+                      f"ETA: {eta_minutes:.1f}min")
+                
                 # Log progress and model performance
                 for mcs_arr_idx in mcs_arr_training_idx:
                     # compute ebno_db for current MCS
@@ -426,6 +466,11 @@ def training_loop(model, label, filename, training_logdir, training_seed,
                 tf.summary.scalar(f"Loss Ch. Est.", loss_chest,
                                   step=global_iter)
                 tf.summary.scalar(f"Total Loss", loss, step=global_iter)
+            
+            phase_time = time.time() - phase_start_time
+            print(f"\n   ✅ 阶段 {i+1} 完成! 用时: {phase_time/60:.1f} 分钟")
+            print(f"   💾 权重已保存: {filename}")
+            print()
 
 def calculate_goodput(pe, pusch_transmitter, verbose=False):
     """
