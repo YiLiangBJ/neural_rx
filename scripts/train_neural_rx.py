@@ -94,7 +94,10 @@ else:
         
         # Set only the specified GPU visible
         tf.config.set_visible_devices([gpus[gpu_id]], 'GPU')
-        tf.config.experimental.set_memory_growth(gpus[gpu_id], True)
+        # Re-get GPU list after setting visible devices
+        visible_gpus = tf.config.get_visible_devices('GPU')
+        if visible_gpus:
+            tf.config.experimental.set_memory_growth(visible_gpus[0], True)
         print(f'🎯 使用 GPU {gpu_id}: {gpus[gpu_id].name}')
         print(f'   已启用内存增长模式')
         
