@@ -22,7 +22,7 @@ from os.path import exists
 
 parser = argparse.ArgumentParser()
 # the config defines the sys parameters
-parser.add_argument("-config_name", help="config filename", type=str)
+parser.add_argument("-config_name", help="config filename", type=str, default="nrx_large")
 # GPU to use
 parser.add_argument("-gpu", 
                     help="GPU selection: specific GPU number (0,1,2...), 'all' for all GPUs, or 'cpu' for CPU only", 
@@ -196,8 +196,7 @@ else:
 
 print()
 print("⚙️  训练参数:")
-print(f"   📚 Epochs: {sys_parameters.training_schedule['epochs']}")
-print(f"   📦 Batch size: {sys_parameters.training_schedule['batch_size']}")
+print(f"    Batch size: {sys_parameters.training_schedule['batch_size']}")
 print(f"   👥 用户数范围: {sys_parameters.min_num_tx} - {sys_parameters.max_num_tx}")
 print(f"   📡 MCS 索引: {sys_parameters.mcs_index}")
 print(f"   📈 评估 EbNo: {sys_parameters.eval_ebno_db_arr} dB")
