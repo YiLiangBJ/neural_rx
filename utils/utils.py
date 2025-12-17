@@ -399,7 +399,7 @@ def training_loop(model, label, filename, training_logdir, training_seed,
             print(f"   📖 学习率: {lr}")
             print(f"   📦 Batch size: {batch_size}")
             print(f"   📡 训练用户数: {train_tx}")
-            print(f"   📶 SNR 范围: {min_snr_db.numpy():.1f} - {max_snr_db.numpy():.1f} dB")
+            print(f"   📶 SNR 范围: {float(min_snr_db.numpy()):.1f} - {float(max_snr_db.numpy()):.1f} dB")
             print(f"   🎯 多损失: {apply_multiloss}")
             print(f"   {'=' * 70}")
             print()
