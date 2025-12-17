@@ -61,9 +61,17 @@ python verify_gpu.py
 ### 5. 开始训练!
 
 ```bash
-# 训练 NRX Large 模型
+# 正常训练(XLA 加速,首次编译需等待)
 python scripts/train_neural_rx.py -config_name nrx_large -gpu 0
+
+# 快速调试(无 XLA 编译,立即开始但较慢)
+python scripts/train_neural_rx.py -config_name nrx_large -gpu 0 --no-xla
+
+# 完整调试模式(可设置断点,逐步执行)
+python scripts/train_neural_rx.py -config_name nrx_large -gpu 0 -debug
 ```
+
+**📚 调试模式详解**: 查看 [`docs/DEBUG_MODES.md`](docs/DEBUG_MODES.md)
 
 ---
 

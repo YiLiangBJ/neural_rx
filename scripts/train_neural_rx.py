@@ -26,7 +26,9 @@ parser.add_argument("-config_name", help="config filename", type=str)
 # GPU to use
 parser.add_argument("-gpu", help="GPU to use", type=int, default=0)
 # Easier debugging with breakpoints when running the code eagerly
-parser.add_argument("-debug", help="Set debugging configuration", action="store_true", default=False)
+parser.add_argument("-debug", help="Enable debug mode (disables XLA, enables eager execution)", action="store_true", default=False)
+# Disable XLA compilation (faster startup, slower training)
+parser.add_argument("--no-xla", help="Disable XLA compilation (useful for debugging)", action="store_true", default=False)
 
 # Parse all arguments
 args = parser.parse_args()
@@ -78,9 +80,26 @@ filename = get_weights_path(label)
 training_logdir = get_logs_path()
 training_seed = 42
 
+# Debug mode: disable XLA and enable eager execution
 if args.debug:
     tf.config.run_functions_eagerly(True)
     training_logdir = get_logs_path("debug")
+    # Override XLA setting in debug mode
+    sys_parameters.xla = False
+    print("🐛 调试模式已激活:")
+    print("   - Eager execution: 启用 (可以设置断点)")
+    print("   - XLA 编译: 禁用 (无编译等待)")
+    print("   - 日志目录: logs/debug/")
+    print("   ⚠️  注意: 调试模式会显著降低训练速度!")
+    print()
+
+# Optional: disable XLA without full debug mode
+if args.no_xla:
+    sys_parameters.xla = False
+    print("⚡ XLA 编译已禁用")
+    print("   ✅ 优点: 无编译等待,快速启动")
+    print("   ⚠️  缺点: 训练速度较慢")
+    print()
 
 #################################################################
 # Start training
@@ -95,8 +114,9 @@ print(f"🎯 GPU: {args.gpu}")
 print(f"💾 权重路径: {filename}")
 print(f"📊 日志路径: {training_logdir}")
 print(f"🌱 随机种子: {training_seed}")
+print(f"🐛 调试模式: {'启用' if args.debug else '禁用'}")
 if args.debug:
-    print(f"🐛 调试模式: 启用 (eager execution)")
+    print(f"   ⚠️  调试模式会禁用 XLA 并启用 eager execution")
 print("=" * 70)
 print()
 
