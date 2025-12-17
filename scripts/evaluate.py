@@ -35,7 +35,10 @@ parser.add_argument("-target_bler",
                 type=float, default=0.001)
 parser.add_argument("-num_cov_samples",
                     help="Number of samples for covariance generation", type=int, default=100000)
-parser.add_argument("-gpu", help="GPU to use", type=int, default=0)
+parser.add_argument("-gpu", 
+                    help="GPU selection: specific GPU number (0,1,2...), 'all' for all GPUs, or 'cpu' for CPU only", 
+                    type=str, 
+                    default="0")
 parser.add_argument("-num_tx_eval",
                     help="Number of active users",
                     type=int, nargs='+', default=-1)
@@ -74,17 +77,46 @@ tf.get_logger().setLevel('ERROR')
 
 gpus = tf.config.list_physical_devices('GPU')
 
+# Configure GPU/CPU usage
 if distribute != "all":
-    if gpus and len(gpus) > args.gpu:
-        try:
-            tf.config.set_visible_devices(gpus[args.gpu], 'GPU')
-            print('Only GPU number', args.gpu, 'used.')
-            tf.config.experimental.set_memory_growth(gpus[args.gpu], True)
-        except RuntimeError as e:
-            print(e)
-    else:
-        print("No GPU detected or GPU index out of range, using CPU.")
+    if args.gpu.lower() == 'cpu':
+        # Force CPU only
         tf.config.set_visible_devices([], 'GPU')
+        print('🖥️  使用 CPU 评估 (所有 GPU 已禁用)')
+        
+    elif args.gpu.lower() == 'all':
+        # Use all available GPUs
+        if len(gpus) == 0:
+            print('❌ 未检测到 GPU,使用 CPU')
+            tf.config.set_visible_devices([], 'GPU')
+        else:
+            print(f'📊 使用所有 {len(gpus)} 个 GPU')
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+    else:
+        # Use specific GPU
+        try:
+            gpu_id = int(args.gpu)
+            if gpu_id < 0 or gpu_id >= len(gpus):
+                print(f'❌ GPU {gpu_id} 不存在! 可用 GPU: {len(gpus)}, 使用 CPU')
+                tf.config.set_visible_devices([], 'GPU')
+            else:
+                tf.config.set_visible_devices([gpus[gpu_id]], 'GPU')
+                tf.config.experimental.set_memory_growth(gpus[gpu_id], True)
+                print(f'🎯 使用 GPU {gpu_id}')
+        except ValueError:
+            print(f'❌ 无效的 GPU 参数: {args.gpu}, 使用 CPU')
+            tf.config.set_visible_devices([], 'GPU')
+else:
+    # Distribute over all GPUs
+    if len(gpus) > 0:
+        print(f'📊 分布式评估: 使用所有 {len(gpus)} 个 GPU')
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    else:
+        print('❌ 未检测到 GPU,使用 CPU')
+
+print()
 
 import sys
 # Initialize project paths
