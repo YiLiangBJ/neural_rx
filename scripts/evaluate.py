@@ -136,6 +136,10 @@ from os.path import exists
 
 if args.debug:
     tf.config.run_functions_eagerly(True)
+    graph_mode = "graph"  # Debug mode: disable XLA
+    print("🐛 调试模式: 启用 (XLA 已禁用)")
+else:
+    graph_mode = "xla"  # Use XLA for better performance
 
 ##################################################################
 # Run evaluations
@@ -233,7 +237,7 @@ for num_tx_eval in num_tx_evals:
 
         # Start sim
         ber, bler = sim_ber(e2e_nn,
-                            graph_mode="xla",
+                            graph_mode=graph_mode,
                             ebno_dbs=ebno_db,
                             max_mc_iter=max_mc_iter,
                             num_target_block_errors=num_target_block_errors,
@@ -262,7 +266,7 @@ for num_tx_eval in num_tx_evals:
 
             print("\nRunning: " + sys_parameters.system)
             ber, bler = sim_ber(e2e_baseline,
-                            graph_mode="xla",
+                            graph_mode=graph_mode,
                             ebno_dbs=ebno_db,
                             max_mc_iter=max_mc_iter,
                             num_target_block_errors=num_target_block_errors,
