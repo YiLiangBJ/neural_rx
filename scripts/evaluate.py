@@ -202,7 +202,8 @@ for num_tx_eval in num_tx_evals:
     # Generate covariance matrices for LMMSE-based baselines
     if not eval_nrx_only:
         print("Generating cov matrix.")
-        os.system(f"python compute_cov_mat.py -config_name {config_name} -gpu {gpu} -num_samples {num_cov_samples} -num_tx_eval {num_tx_eval}")
+        compute_cov_script = os.path.join(script_dir, "compute_cov_mat.py")
+        os.system(f"python {compute_cov_script} -config_name {config_name} -gpu {gpu} -num_samples {num_cov_samples} -num_tx_eval {num_tx_eval}")
 
     # Loop over all evaluation MCS indices
     for mcs_arr_eval_idx in mcs_arr_eval_idxs:
