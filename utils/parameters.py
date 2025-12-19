@@ -407,12 +407,12 @@ class Parameters:
         if self.system in ("baseline_lmmse_kbest", "baseline_lmmse_lmmse"):
 
             # test if files exist
-            fn = f'../weights/{self.label}_time_cov_mat.npy'
+            from utils.project_paths import WEIGHTS_DIR
+            fn = str(WEIGHTS_DIR / f'{self.label}_time_cov_mat.npy')
             if not exists(fn):
                 raise FileNotFoundError("time_cov_mat.npy not found. " \
                     "Please run compute_cov_mat.py for given config first.")
 
-            from utils.project_paths import WEIGHTS_DIR
             self.space_cov_mat = tf.cast(np.load(
                         str(WEIGHTS_DIR / f'{self.label}_space_cov_mat.npy')),
                                                 tf.complex64)
